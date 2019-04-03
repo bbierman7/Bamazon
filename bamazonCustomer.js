@@ -14,11 +14,24 @@ var connection = mysql.createConnection({
 connection.connect(function(err){
     if (err) throw err;
     console.log("connected as id" + connection.threadId);
-    whatToBuy();
+    // console.log(res);
+    // displayTable();
+    displayTable();
 });
 
-
 //==========================================================================
+
+//display table of everything
+function displayTable(){
+    var displaySelection = "SELECT product_name, department_name, price, stock_quantity FROM products"; 
+    connection.query(displaySelection, function (err, res){
+        if (err) throw err;
+        console.table(res);
+        whatToBuy();
+    })
+};
+
+
 //ask user what they want to buy
 function whatToBuy(){
     inquirer
@@ -35,15 +48,17 @@ function whatToBuy(){
         }
     ])
     .then(function(answer){
-        var queryBamazon = "SELECT * FROM products WHERE id = ?";
+        var queryBamazon = "SELECT * FROM products WHERE item_id = ?";
         connection.query(queryBamazon, answer.buy, function (err, res) {
             if (err) throw err;
             if(!res.length){
                 console.log("Sorry, you picked an item which is not in our inventory. Please try again");
             whatToBuy();
             }
-        }) 
-            
-        
-    })
+        }); 
+    });
 }
+
+// determine if there is enough in inventory for id
+// function inventoryCheck(){
+// }
