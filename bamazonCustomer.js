@@ -58,17 +58,17 @@ function whatToBuy(inventory){
             //check if enough in stock
             if(inventory[answer.buy].stock_quantity >= answer.amount){
                 var leftOver = inventory[answer.buy].stock_quantity - answer.amount;
-                console.log("leftover: ",leftOver)
+                // console.log("leftover: ",leftOver)
                 totalCost = answer.amount * inventory[answer.buy].price;
                 var queryBamazon = "UPDATE products SET ? WHERE ?"
-                console.log(queryBamazon);
+                // console.log(queryBamazon);
                 connection.query(queryBamazon,[{stock_quantity : leftOver},{item_id: +answer.buy+1}], function(err, res){
                     if (err) throw err;
                     console.log("Your total cost is $" + parseFloat(totalCost).toFixed(2));
                     displayTable();
                 })
             } else {
-                console.log("Insufficient quantity!: " + inventory[answer.buy].stock_quantity);
+                console.log("Sorry! We only have " + inventory[answer.buy].stock_quantity + " in stock");
                 displayTable();
             }
 
