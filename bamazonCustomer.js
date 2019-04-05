@@ -58,11 +58,13 @@ function whatToBuy(inventory){
             //check if enough in stock
             if(inventory[answer.buy].stock_quantity >= answer.amount){
                 var leftOver = inventory[answer.buy].stock_quantity - answer.amount;
+                console.log("leftover: ",leftOver)
                 totalCost = answer.amount * inventory[answer.buy].price;
-                var queryBamazon = "UPDATE products SET stock_quantity = " + leftOver + " WHERE item_id = " + (answer.buy + 1);
-                connection.query(queryBamazon, function(err, res){
+                var queryBamazon = "UPDATE products SET ? WHERE ?"
+                console.log(queryBamazon);
+                connection.query(queryBamazon,[{stock_quantity : leftOver},{item_id: +answer.buy+1}], function(err, res){
                     if (err) throw err;
-                    console.log("Your total cost is, $" + parseFloat(totalCost).toFixed(2));
+                    console.log("Your total cost is $" + parseFloat(totalCost).toFixed(2));
                     displayTable();
                 })
             } else {
@@ -73,30 +75,3 @@ function whatToBuy(inventory){
         }
     });
 };
-
-
-
-    //     var queryBamazon = "SELECT * FROM products WHERE item_id = ?";
-    //     connection.query(queryBamazon, answer.buy, function (err, res) {
-    //         if (err) throw err;
-
-    //         //we don't have that item in stock
-    //         if(!res.length){
-    //             console.log("Sorry, you picked an item which is not in our inventory. Please try again");
-    //             whatToBuy();
-    //         };
-
-    //     });
-    //     var leftOver = "SELECT stock_quantity FROM products WHERE item_id = ?";
-    //     var remaining;
-    //     connection.query(leftOver, answer.amount, function (err,res){
-    //         if (err) throw err;
-    //         if (answer.amount > stock_quantity){
-    //             remaining = answer.amount - stock_quantity;
-    //             console.log("There are now: " + remaining + "of: " + item_id + "left in inventory");
-
-    //         }
-    //     })
-    // });
-    // };
-    
